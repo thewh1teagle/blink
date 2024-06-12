@@ -36,5 +36,11 @@ cargo add blinkscan
 2. Include in `main.rs`
 
 ```rust
-use blinkscan;
+fn main() {
+    let interface = blinkscan::get_default_interface().unwrap();
+    let network = blinkscan::create_network(&interface);
+    for host in blinkscan::scan_network(network, std::time::Duration::from_secs(3)) {
+        println!("{:?}", host);
+    }
+}
 ```
