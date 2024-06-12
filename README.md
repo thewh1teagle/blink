@@ -2,7 +2,7 @@
 
 Scan your network faster than you can blink your eyes!
 
-Cross-platform and doesn't require admin privileges.
+Supports Windows/macOS/Linux and doesn't require admin privileges.
 
 # Build
 
