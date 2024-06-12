@@ -13,7 +13,18 @@ use pinger::ping;
 
 pub fn get_interfaces() -> Vec<Interface> {
     let mut interfaces = netdev::get_interfaces();
-    interfaces.sort_by_key(|i| i.index);
+    if let Ok(default_interface) = get_default_interface() {
+        // Sort interfaces prioritizing the default interface to be first
+        interfaces.sort_by(|a, b| {
+            if a.index == default_interface.index {
+                std::cmp::Ordering::Less
+            } else if b.index == default_interface.index {
+                std::cmp::Ordering::Greater
+            } else {
+                a.index.cmp(&b.index)
+            }
+        });
+    }
     interfaces
 }
 

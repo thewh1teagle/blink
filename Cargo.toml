@@ -1,6 +1,6 @@
 [package]
 name = "blinkscan"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 repository = "https://github.com/thewh1teagle/blink"
 description = "Network scanner in speed of a blink"
