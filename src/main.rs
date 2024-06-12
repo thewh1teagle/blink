@@ -1,7 +1,7 @@
-use std::time::Duration;
+use blinkscan::{create_network, get_default_interface, get_interfaces, scan_network, Host};
 use clap::Parser;
 use colored::Colorize;
-use blinkscan::{get_default_interface, get_interfaces, create_network, scan_network, Host};
+use std::time::Duration;
 
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
@@ -25,28 +25,44 @@ fn main() {
     if args.list {
         let interfaces = get_interfaces();
         for interface in interfaces {
-            println!("{}. {}", interface.index, interface.friendly_name.clone().unwrap_or(interface.name.clone()));
+            println!(
+                "{}. {}",
+                interface.index,
+                interface
+                    .friendly_name
+                    .clone()
+                    .unwrap_or(interface.name.clone())
+            );
         }
         return;
     }
-    
+
     let interface = if let Some(index) = args.index {
         let interfaces = get_interfaces();
-        interfaces.iter().find(|i| i.index == index).unwrap().clone() // Cloning the interface found
+        interfaces
+            .iter()
+            .find(|i| i.index == index)
+            .unwrap()
+            .clone() // Cloning the interface found
     } else {
         get_default_interface().unwrap()
     };
-    log::debug!("interface is {:?}", interface.clone().friendly_name.unwrap());
+    log::debug!(
+        "interface is {:?}",
+        interface.clone().friendly_name.unwrap()
+    );
     let network = create_network(&interface);
-    
-    let timeout = args.timeout.map(|d| d.into()).unwrap_or(Duration::from_millis(600));
+
+    let timeout = args
+        .timeout
+        .map(|d| d.into())
+        .unwrap_or(Duration::from_millis(600));
     let host_iterator = scan_network(network, timeout);
-    
+
     for host in host_iterator {
         print_host(&host);
     }
 }
-
 
 fn print_host(host: &Host) {
     println!(

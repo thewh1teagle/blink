@@ -1,15 +1,15 @@
+use dns_lookup::lookup_addr;
+use ipnetwork::Ipv4Network;
+use serde::{Deserialize, Serialize};
 use std::{
     net::{IpAddr, Ipv4Addr},
     time::Duration,
 };
-use dns_lookup::lookup_addr;
-use ipnetwork::Ipv4Network;
-use serde::{Serialize, Deserialize};
 mod vendor;
 use crossbeam_channel::{unbounded, Receiver};
+pub use netdev::{get_default_interface, Interface};
 use netneighbours::get_table;
 use pinger::ping;
-pub use netdev::{get_default_interface, Interface};
 
 pub fn get_interfaces() -> Vec<Interface> {
     let mut interfaces = netdev::get_interfaces();
@@ -41,7 +41,11 @@ impl Iterator for HostIterator {
             if let Some(info) = self.arp_table.iter().find(|i| i.0 == active_ip) {
                 let mac = &info.1;
                 let vendor_oui = vendor::get_vendor_oui(mac.as_bytes()).unwrap();
-                let vendor_name = self.vendor.search_by_mac(&vendor_oui).unwrap_or_default().unwrap_or_default();
+                let vendor_name = self
+                    .vendor
+                    .search_by_mac(&vendor_oui)
+                    .unwrap_or_default()
+                    .unwrap_or_default();
                 let hostname = lookup_addr(&IpAddr::from(active_ip)).unwrap_or_default();
                 log::debug!("hostanme is {}", hostname);
                 let host = Host {
@@ -62,8 +66,7 @@ pub fn create_network(interface: &Interface) -> Ipv4Network {
     let gateway = gateway.ipv4.first().unwrap();
     let netmask = interface.ipv4.first().unwrap().netmask;
     log::debug!("gateway: {:?} netmask: {}", gateway, netmask);
-    let network = Ipv4Network::new(*gateway, ipv4_to_prefix(netmask)).unwrap();
-    network
+    Ipv4Network::new(*gateway, ipv4_to_prefix(netmask)).unwrap()
 }
 
 fn ipv4_to_prefix(netmask: Ipv4Addr) -> u8 {
@@ -72,13 +75,15 @@ fn ipv4_to_prefix(netmask: Ipv4Addr) -> u8 {
 
 pub fn scan_network(network: Ipv4Network, timeout: Duration) -> HostIterator {
     if network.size() > 256 {
-        log::warn!("The network is larger than /24 (more than 255 IP addresses). This may take a while.");
+        log::warn!(
+            "The network is larger than /24 (more than 255 IP addresses). This may take a while."
+        );
     }
-    
+
     let (tx, rx) = unbounded();
     let mut arp_table = get_table();
     arp_table.retain(|e| !e.1.is_nil());
-    
+
     for ip in network.iter() {
         let tx = tx.clone();
         std::thread::spawn(move || {
@@ -90,10 +95,10 @@ pub fn scan_network(network: Ipv4Network, timeout: Duration) -> HostIterator {
             }
         });
     }
-    
+
     HostIterator {
         rx,
-        vendor: vendor::Vendor::new(),
+        vendor: vendor::Vendor::default(),
         arp_table,
     }
 }
