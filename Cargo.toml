@@ -1,6 +1,6 @@
 [package]
 name = "blinkscan"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 repository = "https://github.com/thewh1teagle/blink"
 description = "Network scanner in speed of a blink"
@@ -23,7 +23,7 @@ indicatif = "0.17.8"
 ipnetwork = "0.20.0"
 log = "0.4.21"
 macaddr = "1.0.1"
-netdev = "0.28.0"
+netdev = { version = "0.28.0", features = ["serde"] }
 netneighbours = "0.1.2"
 pinger = "1.1.1"
 reqwest = "0.12.4"

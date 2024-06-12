@@ -134,7 +134,7 @@ checksum = "cf4b9d6a944f767f8e5e0db018570623c85f3d925ac718db4e06d0187adb21c1"
 
 [[package]]
 name = "blinkscan"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "clap",
  "colored",
@@ -1055,6 +1055,7 @@ dependencies = [
  "netlink-packet-route",
  "netlink-sys",
  "once_cell",
+ "serde",
  "system-configuration 0.6.0",
  "windows-sys 0.52.0",
 ]
