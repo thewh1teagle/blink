@@ -1,0 +1,12 @@
+{
+    "build": {
+        "path_prefix": "blink/"
+    },
+    "styles": {
+        "theme": "axodark",
+        "favicon": "https://www.axo.dev/favicon.ico"
+    },
+    "components": {
+        "changelog": false
+    }
+}
