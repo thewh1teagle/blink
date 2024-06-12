@@ -143,6 +143,7 @@ dependencies = [
  "dns-lookup",
  "env_logger",
  "eyre",
+ "humantime",
  "indicatif",
  "ipnetwork",
  "log",

@@ -16,6 +16,10 @@ struct Args {
     /// Index for interface
     #[arg(short, long)]
     index: Option<u32>,
+
+    /// Index for interface
+    #[arg(short, long)]
+    timeout: Option<humantime::Duration>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -58,14 +62,14 @@ fn main() {
 
     let network = Ipv4Network::new(*gateway, ipv4_to_prefix(netmask)).unwrap();
     log::debug!("network: {}", network);
-    scan_network(network);
+    scan_network(network, args.timeout.map(|d| d.into()).unwrap_or(Duration::from_millis(500)));
 }
 
 fn ipv4_to_prefix(netmask: Ipv4Addr) -> u8 {
     netmask.octets().iter().map(|&b| b.count_ones() as u8).sum()
 }
 
-fn scan_network(network: Ipv4Network) {
+fn scan_network(network: Ipv4Network, timeout: Duration) {
 
     if network.size() > 256 {
         log::warn!("The network is larger than /24 (more than 255 IP addresses). This may take a while.");
@@ -76,7 +80,7 @@ fn scan_network(network: Ipv4Network) {
         let tx = tx.clone();
         std::thread::spawn(move || {
             let stream = pinger::ping(ip.to_string(), None);
-            let result = stream.unwrap().recv_timeout(Duration::from_millis(500));
+            let result = stream.unwrap().recv_timeout(timeout);
             if result.is_ok() {
                 tx.send(ip).unwrap();
             }
