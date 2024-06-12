@@ -40,7 +40,7 @@ fn main() {
     log::debug!("interface is {:?}", interface.clone().friendly_name.unwrap());
     let network = create_network(&interface);
     
-    let timeout = args.timeout.map(|d| d.into()).unwrap_or(Duration::from_millis(500));
+    let timeout = args.timeout.map(|d| d.into()).unwrap_or(Duration::from_millis(600));
     let host_iterator = scan_network(network, timeout);
     
     for host in host_iterator {
