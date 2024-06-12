@@ -1,5 +1,5 @@
 [package]
-name = "blink"
+name = "blinkscan"
 version = "0.1.0"
 edition = "2021"
 repository = "https://github.com/thewh1teagle/blink"
