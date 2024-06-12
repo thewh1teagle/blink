@@ -4,6 +4,10 @@ version = "0.1.0"
 edition = "2021"
 repository = "https://github.com/thewh1teagle/blink"
 
+[lib]
+name = "blinkscan"
+path = "src/lib.rs"
+
 [dependencies]
 clap = { version = "4.5.7", features = ["derive"] }
 colored = "2.1.0"

@@ -1,8 +1,7 @@
-mod scanner;
 use std::time::Duration;
 use clap::Parser;
 use colored::Colorize;
-use scanner::{get_default_interface,get_interfaces, create_network, scan_network, Host};
+use blinkscan::{get_default_interface, get_interfaces, create_network, scan_network, Host};
 
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
