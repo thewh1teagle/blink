@@ -44,3 +44,7 @@ fn main() {
     }
 }
 ```
+
+# GUI
+
+See [thewh1teagle/Ruscan](https://github.com/thewh1teagle/Ruscan)
