@@ -3,11 +3,13 @@ use std::process;
 
 use csv::{Position, Reader, ReaderBuilder};
 use eyre::{Context, Result};
+
 // The Vendor structure performs search operations on a vendor database to find
 // which MAC address belongs to a specific vendor. All network vendors have a
 // dedicated MAC address range that is registered by the IEEE and maintained in
 // the OUI database. An OUI is a 24-bit globally unique assigned number
 // referenced by various standards.
+
 pub struct Vendor {
     reader: Option<Reader<Cursor<Vec<u8>>>>,
 }
