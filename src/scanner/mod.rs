@@ -9,8 +9,13 @@ mod vendor;
 use crossbeam_channel::{unbounded, Receiver};
 use netneighbours::get_table;
 use pinger::ping;
-pub use netdev::{get_default_interface, get_interfaces, Interface};
+pub use netdev::{get_default_interface, Interface};
 
+pub fn get_interfaces() -> Vec<Interface> {
+    let mut interfaces = netdev::get_interfaces();
+    interfaces.sort_by_key(|i| i.index);
+    interfaces
+}
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Host {
@@ -38,6 +43,7 @@ impl Iterator for HostIterator {
                 let vendor_oui = vendor::get_vendor_oui(mac.as_bytes()).unwrap();
                 let vendor_name = self.vendor.search_by_mac(&vendor_oui).unwrap_or_default().unwrap_or_default();
                 let hostname = lookup_addr(&IpAddr::from(active_ip)).unwrap_or_default();
+                log::debug!("hostanme is {}", hostname);
                 let host = Host {
                     host: active_ip.to_string(),
                     hostname: Some(hostname),

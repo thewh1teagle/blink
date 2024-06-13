@@ -24,8 +24,7 @@ fn main() {
     env_logger::init();
     let args = Args::parse();
     if args.list {
-        let mut interfaces = get_interfaces();
-        interfaces.sort_by_key(|i| i.index);
+        let interfaces = get_interfaces();
         for interface in interfaces {
             println!("{}. {}", interface.index, interface.friendly_name.clone().unwrap_or(interface.name.clone()));
         }
@@ -33,9 +32,7 @@ fn main() {
     }
     
     let interface = if let Some(index) = args.index {
-        log::debug!("search interface {}", index);
         let interfaces = get_interfaces();
-        log::debug!("interfaces: {:?}", interfaces);
         interfaces.iter().find(|i| i.index == index).unwrap().clone() // Cloning the interface found
     } else {
         get_default_interface().unwrap()
@@ -49,7 +46,6 @@ fn main() {
     for host in host_iterator {
         print_host(&host);
     }
-    log::debug!("finish");
 }
 
 
