@@ -33,7 +33,7 @@ impl Vendor {
     // vendor search instance without database reader.
     pub fn new() -> Self {
         
-        let bytes = include_bytes!("oui.csv");
+        let bytes = include_bytes!("../oui.csv");
         let cursor = Cursor::new(bytes.to_vec());
         let reader = ReaderBuilder::new().has_headers(true).from_reader(cursor);
 
@@ -81,7 +81,7 @@ mod tests {
 
     use netdev::mac::MacAddr;
 
-    use crate::vendor;
+    use crate::scanner::vendor;
 
     use super::*;
 

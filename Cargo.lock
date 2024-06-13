@@ -147,6 +147,7 @@ dependencies = [
  "indicatif",
  "ipnetwork",
  "log",
+ "macaddr",
  "netdev",
  "netneighbours",
  "pinger",
