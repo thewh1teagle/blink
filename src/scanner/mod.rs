@@ -58,7 +58,7 @@ impl Iterator for HostIterator {
                     .unwrap_or_default()
                     .unwrap_or_default();
                 let hostname = lookup_addr(&IpAddr::from(active_ip)).unwrap_or_default();
-                log::debug!("hostanme is {}", hostname);
+                tracing::debug!("hostanme is {}", hostname);
                 let host = Host {
                     host: active_ip.to_string(),
                     hostname: Some(hostname),
@@ -73,10 +73,11 @@ impl Iterator for HostIterator {
 }
 
 pub fn create_network(interface: &Interface) -> Ipv4Network {
-    let gateway = interface.clone().gateway.unwrap();
+    tracing::debug!("getting gateway for {:?}", interface);
+    let gateway = interface.clone().gateway.expect("No gateway");
     let gateway = gateway.ipv4.first().unwrap();
     let netmask = interface.ipv4.first().unwrap().netmask;
-    log::debug!("gateway: {:?} netmask: {}", gateway, netmask);
+    tracing::debug!("gateway: {:?} netmask: {}", gateway, netmask);
     Ipv4Network::new(*gateway, ipv4_to_prefix(netmask)).unwrap()
 }
 
@@ -86,7 +87,7 @@ fn ipv4_to_prefix(netmask: Ipv4Addr) -> u8 {
 
 pub fn scan_network(network: Ipv4Network, timeout: Duration) -> HostIterator {
     if network.size() > 256 {
-        log::warn!(
+        tracing::warn!(
             "The network is larger than /24 (more than 255 IP addresses). This may take a while."
         );
     }

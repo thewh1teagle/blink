@@ -1,3 +1,6 @@
+/*
+cargo run --example usage
+*/
 use blinkscan::{create_network, get_default_interface, get_interfaces, scan_network, Host};
 use clap::Parser;
 use colored::Colorize;
@@ -20,7 +23,11 @@ struct Args {
 }
 
 fn main() {
-    env_logger::init();
+    tracing_subscriber::fmt()
+        .with_line_number(true)
+        .with_file(true)
+        .with_env_filter(tracing_subscriber::filter::EnvFilter::from_default_env())
+        .init();
     let args = Args::parse();
     if args.list {
         let interfaces = get_interfaces();
@@ -47,7 +54,7 @@ fn main() {
     } else {
         get_default_interface().unwrap()
     };
-    log::debug!(
+    tracing::debug!(
         "interface is {:?}",
         interface.clone().friendly_name.unwrap()
     );

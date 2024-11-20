@@ -63,7 +63,7 @@ impl Vendor {
 
                 for vendor_result in reader.records() {
                     let record = vendor_result.unwrap_or_else(|err| {
-                        log::error!("Could not read CSV record ({})", err);
+                        tracing::error!("Could not read CSV record ({})", err);
                         process::exit(1);
                     });
                     let potential_oui = record.get(1).unwrap_or("");
